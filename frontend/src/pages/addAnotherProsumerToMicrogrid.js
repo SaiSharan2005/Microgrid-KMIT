@@ -151,7 +151,7 @@ function AddAnotherProsumer(props) {
       Number(MicroGridID),
       anotherProsumerAddress
     );
-    const response = await fetch("/api/updateProsumer", {
+    const response = await fetch(process.env.REACT_APP_BackendUrl+"/updateProsumer", {
       method: "POST",
       headers: { "Content-Type": "application/json", },
       body: JSON.stringify({ update: { "microGridId": MicroGridID }, filter: { "gst_number": ProsumerName } })

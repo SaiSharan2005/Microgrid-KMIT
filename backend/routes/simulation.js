@@ -1,6 +1,7 @@
 const express = require("express");
+require('dotenv').config();
 const router = express.Router();
-const contractAddress = "0x653B99612366ff7C7ae1A48D46B63c79FA02284d";
+const contractAddress =process.env.contractAddress;
 const listener = require("./listener");
 const TransactionBills = require("../models/transactionBillsSchema");
 const mongoose = require('mongoose');
@@ -295,5 +296,8 @@ router.get("/getUserWaiting", (req, res) => {
 
 router.get("/MicrogridData", (req, res) => {
   res.json(Data);
+});
+router.get("/test", (req, res) => {
+  res.json({"test":"workign bey "});
 });
 module.exports = router;

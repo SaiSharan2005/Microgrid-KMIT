@@ -431,7 +431,7 @@ contract Microgrid {
     }
 
     function getTransaction(
-        uint256 index
+        uint256 index 
     )
         public
         view

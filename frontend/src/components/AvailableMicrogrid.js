@@ -26,7 +26,7 @@ function AvailableMicrogrid() {
     async function fetchData() {
       try {
         const response = await fetch(
-          "/api/simulation/MicrogridData",
+          process.env.REACT_APP_BackendUrl+"/simulation/MicrogridData",
           {
             method: "GET",
             headers: {

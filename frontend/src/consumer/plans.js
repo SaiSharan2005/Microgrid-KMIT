@@ -98,7 +98,7 @@ export default function ConsumerPlans(props) {
     async function sendDataToServer(name, microid, units, amount,microGridId) {
         try {
             // ... (your existing code for sending data to the server)
-            const response = await fetch('/api/createTransactionBills', {
+            const response = await fetch(process.env.REACT_APP_BackendUrl+'/createTransactionBills', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ export default function ConsumerPlans(props) {
             });
             
             const responseData = await response.json(); // Await the response text
-            const simulationResponse = await fetch("/api/simulation/requireUser", {
+            const simulationResponse = await fetch(process.env.REACT_APP_BackendUrl+"/simulation/requireUser", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ export default function ConsumerPlans(props) {
     useEffect(() => {
         const fetchData = async (microGridId) => {
           try {
-            const response = await fetch("/api/getAllPlans", {
+            const response = await fetch(process.env.REACT_APP_BackendUrl+"/getAllPlans", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({"microGridId":microGridId})

@@ -180,7 +180,7 @@ function ShowImage({ webRef,aadharnumber,navigate}) {
   const sendDataToServer = async () => {
     try {
       // ... (your existing code for sending data to the server)
-      const response = await fetch('/api/aadharDatabase', {
+      const response = await fetch(process.env.REACT_APP_BackendUrl+'/aadharDatabase', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

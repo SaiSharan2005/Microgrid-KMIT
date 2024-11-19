@@ -152,7 +152,7 @@ export default function ProducerSignup(props) {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/createProducerUser", {
+      const response = await fetch(process.env.REACT_APP_BackendUrl+"/createProducerUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ConnectToMetaMask from "./hooks/MetaMaskConnection.js";
 import Base from "./base.js"
+// import dotenv from "dotenv";
 //consumer Imports
 import {ConsumerAuthentication,ConsumerLogin} from "./consumer/authentication.js";
+import AddFace from "./pages/addAdharAuthentication.js";
 import ConsumerFaceAuthentication from "./consumer/registration.js";
 import ConsumerOtp from "./consumer/otp.js";
 import ConsumerMicroid from "./consumer/microid.js";
@@ -29,7 +31,7 @@ import AddProducer from "./components/AddProducer.js";
 import JoinOrCreateMicroGrid from "./pages/JoinOrCreateMicroGrid.js";
 import Test from "./components/Test.js"
 import AvailableMicrogrid from "./components/AvailableMicrogrid.js";
-import AddAnotherProducerToMg from "./pages/AddAnotherProducerToMicrogrid.js";
+import AddAnotherProducerToMg from "./pages/addAnotherProducerToMicrogrid.js";
 
 //prosumer Imports
 import ProsumerLogin from "./prosumer/login.js";
@@ -42,10 +44,12 @@ import ProsumerHelp from "./prosumer/help.js";
 import ProsumerHistory from "./prosumer/history.js";
 import ProducerCreateContract from "./prosumer/createcontract.js";
 import AddProsumer from "./components/AddProsumer.js";
-import AddAnotherProsumerToMg from "./pages/AddAnotherProsumerToMicrogrid.js";
+import AddAnotherProsumerToMg from "./pages/addAnotherProsumerToMicrogrid.js";
 
 // import { VariableProvider } from './Context/metaContext.js';
 
+
+// process.env.NODE_ENV
 export default function App() {
   const [getContract, setGetContract] = useState("");
   const [sendContract, setSendContract] = useState("");
@@ -77,6 +81,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Base />} />
           <Route path="/consumer" element={<ConsumerAuthentication />} />
+          <Route path="/addFace" element={<AddFace />} />
           <Route
             path="/consumer/registration"
             element={<ConsumerFaceAuthentication />}

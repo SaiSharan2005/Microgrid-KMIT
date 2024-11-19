@@ -88,7 +88,7 @@ function ProsumerAvailable() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("/api/simulation/MicrogridData", {
+        const response = await fetch(process.env.REACT_APP_BackendUrl+"/simulation/MicrogridData", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

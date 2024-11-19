@@ -14,7 +14,7 @@ function AvailableMicrogrid(props) {
     const data1 = await props.sendContract.addConsumerToMicroGrid(Number(id),props.metaMaskAddress);
     try {
       const response = await fetch(
-        "/api/UpdateConsumer",
+        process.env.REACT_APP_BackendUrl+"/UpdateConsumer",
         {
           method: "POST",
           headers: {
@@ -39,7 +39,7 @@ function AvailableMicrogrid(props) {
     async function fetchData() {
       try {
         const response = await fetch(
-          "/api/simulation/MicrogridData",
+          process.env.REACT_APP_BackendUrl+"/simulation/MicrogridData",
           {
             method: "GET",
             headers: {

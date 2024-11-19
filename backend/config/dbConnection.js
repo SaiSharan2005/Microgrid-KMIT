@@ -3,10 +3,11 @@ const mongoose = require("mongoose");
 // const _DBUrl =process.env.DB;
 
 mongoose.set('strictQuery', true); 
-const password = encodeURIComponent("NaNi....");
+const password = encodeURIComponent("Dhoni@2005");
 mongoose
-  .connect(`mongodb+srv://naniReddy:${password}@cluster0.xflfwqd.mongodb.net/credentials`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  .connect(`mongodb+srv://duginisaisharan:${password}@cluster0.h4tlhz1.mongodb.net/`, {
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+    // serverSelectionTimeoutMS: 3000000,
   }).then(() => console.log("Connected Successful")).catch((err) => console.log(`Connection failed ! Error : ${err}`));
 

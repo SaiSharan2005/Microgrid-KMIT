@@ -7,11 +7,15 @@ const jwt = require("jsonwebtoken")
 const { PythonShell } =  require("python-shell");
 const api = require("./routes/api")
 app.use(cors());
-app.use(express.json());
+// app.use(express.json());
 let dbConnection;
 let jwtSecret = "you are i am"
 require("./config/dbConnection")
 let {getFace ,compareFace} = require("./controllers/AdharAuthentication-controller")
+
+app.use(express.json({ limit: "50mb" })); // Adjust the limit as per your requirement
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
 
 // app.get("/data",getFace)
 

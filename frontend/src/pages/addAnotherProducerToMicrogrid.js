@@ -153,7 +153,7 @@ function AddAnotherProducer(props) {
       anotherProducerAddress
     );
 
-    const response = await fetch("/api/updateProducer", {
+    const response = await fetch(process.env.BackendUrl+"/updateProducer", {
       method: "POST",
       headers: { "Content-Type": "application/json", },
       body: JSON.stringify({ update: { "microGridId": MicroGridID }, filter: { "name": ProducerName } })

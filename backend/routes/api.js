@@ -45,7 +45,7 @@ router.get("/allConsumer", getAllConsumer);
 router.post("/loginConsumer", loginConsumer);
 router.post("/UpdateConsumer", updateMicrogridId);
 
-console.log("ugui")
+
 // router.post('/removeConsumer',removeConsumer);
 // router.post('/removeSpecificConsumers',removeMultipleConsumer);
 
@@ -62,6 +62,10 @@ router.post("/getAllTransaction", getAllTrasaction);
 
 
 router.post('/aadharDatabase',compareFace);
+router.post('/addAadharFace',addFace);
+router.get('/getAadharFace',getFace);
+router.get('/removeAllFaces',removeAllFaces);
+
 
 
 // Prosumer Function

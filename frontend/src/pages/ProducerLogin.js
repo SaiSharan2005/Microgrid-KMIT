@@ -132,7 +132,7 @@ export default function Signup() {
     // Synthetic Event
     console.log("Yes");
     e.preventDefault();
-    const response = await fetch("/api/ProducerLogIn", {
+    const response = await fetch(process.env.REACT_APP_BackendUrl+"/ProducerLogIn", {
       method: "POST",
       headers: {
         "Content-Type": "application/json", 

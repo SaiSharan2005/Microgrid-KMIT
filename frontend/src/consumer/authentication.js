@@ -180,7 +180,7 @@ function ConsumerLogin(){
           // ... (your existing code for sending data to the server)
           const encrypted_inputValue = encryptAES(inputValue);
           // console.log(encrypted_inputValue,"encrypted value")
-          const response = await fetch('/api/loginConsumer', {
+          const response = await fetch(process.env.REACT_APP_BackendUrl+'/loginConsumer', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

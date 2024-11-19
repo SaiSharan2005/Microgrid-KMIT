@@ -82,7 +82,7 @@ function Microid() {
 
     try {
       // ... (your existing code for sending data to the server)
-      const response = await fetch('/api/createConsumer', {
+      const response = await fetch(process.env.REACT_APP_BackendUrl+'/createConsumer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

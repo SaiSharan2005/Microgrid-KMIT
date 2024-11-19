@@ -1,16 +1,17 @@
 import { ethers } from 'ethers';
 import contractABI from '../blockChain/Microgrid.json';
-
+// import dotenv from "dotenv";
 export default  async function ConnectToMetaMask() {
   try {
+    
     const { ethereum } = window;
     console.log("Requesting account...");
     if (window.ethereum) {
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
       console.log(accounts);
 
-      const contractAddress = "0x653B99612366ff7C7ae1A48D46B63c79FA02284d";
-      const ganacheProvider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+      const contractAddress = process.env.REACT_APP_ContractAddress;
+      const ganacheProvider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_JsonRpcProvider);
       const metaMaskAddress = ethereum.selectedAddress;
       console.log("meta mask:",metaMaskAddress)
       const wallet = new ethers.Wallet(ethereum.selectedAddress, ganacheProvider);
