@@ -10,7 +10,7 @@ const listner = (Data, contractAddress) => {
   // );
   const provider = new ethers.providers.JsonRpcProvider({
     url:process.env.JsonRpcProvider,
-    network: { chainId: 1337, name: "ganache" },
+    network: { chainId: 31337, name: "hardhat" },
   });
   const contract = new ethers.Contract(
     contractAddress,

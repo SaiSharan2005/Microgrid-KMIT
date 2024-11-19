@@ -201,6 +201,9 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 app.use("/api",api)
 
+console.log(process.env.JsonRpcProvider)
+
+
 // app.post('/api/aadharDatabase',compareFace);
 
 app.listen(port,()=>{

@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "hardhat": "^2.22.15"
+    "hardhat": "^2.22.16"
+  },
+  "dependencies": {
+    "hardhat-environment": "file:"
   }
 }

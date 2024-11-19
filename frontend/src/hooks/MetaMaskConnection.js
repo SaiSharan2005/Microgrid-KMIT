@@ -11,7 +11,11 @@ export default  async function ConnectToMetaMask() {
       console.log(accounts);
 
       const contractAddress = process.env.REACT_APP_ContractAddress;
-      const ganacheProvider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP_JsonRpcProvider);
+      const ganacheProvider = new ethers.providers.JsonRpcProvider({
+          url:process.env.REACT_APP_JsonRpcProvider,
+          network: { chainId: 31337, name: "hardhat" },
+        }
+      );
       const metaMaskAddress = ethereum.selectedAddress;
       console.log("meta mask:",metaMaskAddress)
       const wallet = new ethers.Wallet(ethereum.selectedAddress, ganacheProvider);
