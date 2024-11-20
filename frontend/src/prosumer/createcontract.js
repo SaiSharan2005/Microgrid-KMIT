@@ -8,7 +8,7 @@ import { decryptAES } from "../hooks/encryption";
     const timespan = document.getElementById("timespan").value;
     console.log(units,timespan)
 
-    const dataAbtgst = await fetch('/api/getGst',{
+    const dataAbtgst = await fetch(process.env.REACT_APP_BackendUrl+'/getGst',{
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
@@ -19,7 +19,7 @@ import { decryptAES } from "../hooks/encryption";
     })
     const dataAbtGstResponse = await dataAbtgst.json()
     console.log(dataAbtGstResponse)
-      const response = await fetch("/api/addPlan", {
+      const response = await fetch(process.env.REACT_APP_BackendUrl+"/addPlan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

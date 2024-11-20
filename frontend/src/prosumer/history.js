@@ -53,7 +53,7 @@ export default function ProsumerHistory(){
         try {
           // ... (your existing code for sending data to the server)
 
-          const response = await fetch('/api/getAllTransaction', {
+          const response = await fetch(process.env.REACT_APP_BackendUrl+'/getAllTransaction', {
 
             method: 'POST',
             headers: {

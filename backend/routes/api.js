@@ -144,7 +144,8 @@ router.post("/getPlan",getPlan);
 router.post("/getAllPlans",getAllPlans);
 
 router.post("/getGst",getGst)
-router.post("/getAllGst",getAllGst)
+router.get("/getAllGst",getAllGst)
+router.post("/addGst",addGst)
 
 router.use("/simulation",Simulation)
 module.exports = router;

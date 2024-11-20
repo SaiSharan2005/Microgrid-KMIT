@@ -5,7 +5,7 @@ function ProsumerAllPlans() {
   const [plans, getPlans] = useState([]);
   useEffect(() => {
     const takingPlans = async () => {
-      const response = await fetch("/api/getAllPlans", {
+      const response = await fetch(process.env.REACT_APP_BackendUrl+"/getAllPlans", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

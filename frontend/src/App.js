@@ -16,6 +16,7 @@ import Form from "./consumer/Form.js";
 import AddConsumer from "./components/AddConsumer.js";
 import IsAuthenticated from "./hooks/IsAuthenticated.js";
 import AvailableMicroGridConsumer from "./consumer/AvailableMicroGridConsumer.js";
+import GstPage from "./pages/GstPage"; // Adjust the import path to match your file structure
 
 // Producer ImportsA
 import ProducerHome from "./pages/ProducerHome.js";
@@ -116,6 +117,8 @@ export default function App() {
             metaMaskAddress={metaMaskAddress} />}
           />
           {/* Producer Routes */}
+          <Route path="/addGST" element={<GstPage />} />
+
           <Route path="/producer/signup" element={<ProducerSignup />} />
           <Route path="/producer/intialSignup" element={<FetchData />} />
           <Route path="/producer/login" element={<ProducerLogIn />} />

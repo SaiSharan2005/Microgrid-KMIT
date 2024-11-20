@@ -135,7 +135,7 @@ function ProsumerLogin() {
   const handleSubmit = async (e) => {
     // Synthetic Event
     e.preventDefault();
-    const response = await fetch("/api/ProsumerLogIn", {
+    const response = await fetch(process.env.REACT_APP_BackendUrl+"/ProsumerLogIn", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

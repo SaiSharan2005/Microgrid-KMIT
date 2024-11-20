@@ -143,7 +143,7 @@ export default function ProsumerSignUp(props) {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/createProsumerUser", {
+      const response = await fetch(process.env.REACT_APP_BackendUrl+"/createProsumerUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
