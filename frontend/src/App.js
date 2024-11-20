@@ -45,6 +45,7 @@ import ProsumerHistory from "./prosumer/history.js";
 import ProducerCreateContract from "./prosumer/createcontract.js";
 import AddProsumer from "./components/AddProsumer.js";
 import AddAnotherProsumerToMg from "./pages/addAnotherProsumerToMicrogrid.js";
+import FetchData from "./pages/IntialProducer.js";
 
 // import { VariableProvider } from './Context/metaContext.js';
 
@@ -116,6 +117,7 @@ export default function App() {
           />
           {/* Producer Routes */}
           <Route path="/producer/signup" element={<ProducerSignup />} />
+          <Route path="/producer/intialSignup" element={<FetchData />} />
           <Route path="/producer/login" element={<ProducerLogIn />} />
           <Route path="/producer/anotherProducersignup" element={<ProducerSignup anotherProducer={true}/>} />
           <Route

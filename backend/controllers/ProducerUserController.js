@@ -95,12 +95,13 @@ const createProducerUser = async (req, res) => {
       });
     }
 
-    if (registrantData) {
+    if (true) {
       await ProducerUser.create({
         registrant: req.body.registrant,
         name: req.body.name,
         password: encryptedPassword,
         designation: req.body.designation,
+        microGridId: req.body.microGridId,
       });
 
       return res.json({ success: true });
