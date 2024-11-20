@@ -95,7 +95,7 @@ const createProducerUser = async (req, res) => {
       });
     }
 
-    if (true) {
+    if (registrantData) {
       await ProducerUser.create({
         registrant: req.body.registrant,
         name: req.body.name,

@@ -51,10 +51,10 @@ function decryptAES(encryptedText) {
 const createProsumerUser = async (req, res) => {
   try {
     console.log(req.body)
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() });
+    // }
 
     const hashedPassword = hashPassword(req.body.password);
     console.log(hashedPassword);
@@ -97,10 +97,10 @@ const createProsumerUser = async (req, res) => {
 
 const ProsumerLogIn = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() });
+    // }
 
     const username = req.body.gst_number;
     const userData = await ProsumerUser.findOne({ gst_number: username });

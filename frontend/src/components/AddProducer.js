@@ -130,7 +130,9 @@ function AddProducer(props) {
     let name = document.getElementById("name").value;
     if(props.anotherProducer){
       const anotherProducerAddress = document.getElementById("anotherProducerAddress").value;
-      const data = await tem.addAnotherProducer(name, Number(uniqueID),anotherProducerAddress);
+      console.log("etst: ",name , uniqueID,anotherProducerAddress)
+      
+      const data = await tem.addAnotherProducer(name, uniqueID,anotherProducerAddress);
    
       console.log("another producer",ProducerName)
       navigate(`/producer/AddToMicrogrid/${ProducerName}`)
@@ -229,3 +231,4 @@ function AddProducer(props) {
 }
 
 export default AddProducer;
+

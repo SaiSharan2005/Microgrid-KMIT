@@ -32,6 +32,7 @@ import JoinOrCreateMicroGrid from "./pages/JoinOrCreateMicroGrid.js";
 import Test from "./components/Test.js"
 import AvailableMicrogrid from "./components/AvailableMicrogrid.js";
 import AddAnotherProducerToMg from "./pages/addAnotherProducerToMicrogrid.js";
+import GstPage from "./pages/GstPage"; // Adjust the import path to match your file structure
 
 //prosumer Imports
 import ProsumerLogin from "./prosumer/login.js";
@@ -231,6 +232,8 @@ export default function App() {
               />
             }
           />
+          <Route path="/addGST" element={<GstPage />} />
+
           {/*ProsumerRoutes*/}
           <Route path="/prosumer/login" element={<ProsumerLogin />} />
           <Route path="/prosumer/home" element={<ProsumerHome />} />
