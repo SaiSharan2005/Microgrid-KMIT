@@ -1,0 +1,46 @@
+.container {
+    max-width: 1200px;
+  }
+  
+  .microgrid-card {
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .microgrid-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #007bff;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .list-item {
+    font-size: 0.9rem;
+    background-color: #f9f9f9;
+  }
+  
+  .no-data h4 {
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .no-data p {
+    color: #6c757d;
+  }
+  
+  .card-footer button {
+    padding: 5px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .text-muted {
+    font-style: italic;
+  }
+  

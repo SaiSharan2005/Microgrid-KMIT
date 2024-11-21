@@ -589,12 +589,12 @@ export default function Base() {
           <div style={{...AboutBox, display:'flex', flexDirection:'column', alignItems:'center', gap:'2.5rem'}}>
             <h2 style ={{color:'#02ffff',textAlign:'center',marginTop: "40px"}}>Presented By</h2>
             <ul style={{listStyleType:'none',marginRight:'10px',color:'white',fontSize:'20px',fontFamily:'Montserrat'}}>
-              <li>Leena Sanjana</li>
-              <li>Rakshitha Reddy</li>
+              <li>Chaithanya</li>
+              <li>Hasini</li>
               <li>Sreehari Smitha</li>
-              <li>Srija Midipelli</li>
+              <li>Manogna</li>
               <li>Sai Sharan</li>
-              <li>Netaji Reddy</li>
+              <li>Nethiya</li>
             </ul>
           </div>
 

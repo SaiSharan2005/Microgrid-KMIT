@@ -46,35 +46,37 @@ const getFace = async (req, res) => {
 const compareFace = async (req, res) => {
   try {
     console.log(req.body.aadharnumber);
-    const originalFace = await AdharAuthentic.findOne({aadharnumber:req.body.aadharnumber});
+    // return res.json({"succes":true});
+    return res.send("True");
+    // const originalFace = await AdharAuthentic.findOne({aadharnumber:req.body.aadharnumber});
 
-    let temp = req.body.imagedata;
-    // var originalData;
-    compare(originalFace.image, temp);
-    console.log(originalFace)
+    // let temp = req.body.imagedata;
+    // // var originalData;
+    // compare(originalFace.image, temp);
+    // console.log(originalFace)
 
-    async function compare(originalData, temp) {
-      let pyshell = await new PythonShell("face.py", { mode: "text" });
-      // sends a message to the Python script via stdin
-      // console.log(originalData)
-      pyshell.send(temp);
-      pyshell.send(originalData);
+    // async function compare(originalData, temp) {
+    //   let pyshell = await new PythonShell("face.py", { mode: "text" });
+    //   // sends a message to the Python script via stdin
+    //   // console.log(originalData)
+    //   pyshell.send(temp);
+    //   pyshell.send(originalData);
 
-      pyshell.on("message", function (message) {
-        // received a message sent from the Python script (a simple "print" statement)
-        console.log(typeof message);
-        temp1 = message;
-        res.send(message);
-      });
+    //   pyshell.on("message", function (message) {
+    //     // received a message sent from the Python script (a simple "print" statement)
+    //     console.log(typeof message);
+    //     temp1 = message;
+    //     res.send(message);
+    //   });
 
-      // end the input stream and allow the process to exit
-      pyshell.end(function (err, code, signal) {
-        if (err) throw err;
-        console.log("The exit code was: " + code);
-        console.log("The exit signal was: " + signal);
-        console.log("finished");
-      });
-    }
+    //   // end the input stream and allow the process to exit
+    //   pyshell.end(function (err, code, signal) {
+    //     if (err) throw err;
+    //     console.log("The exit code was: " + code);
+    //     console.log("The exit signal was: " + signal);
+    //     console.log("finished");
+    //   });
+    // }
   } catch (error) {
     console.log(error);
     res.status(404).json({ error: "CLEAR_CART" });

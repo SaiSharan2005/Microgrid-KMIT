@@ -4,7 +4,7 @@ import ConnectToMetaMask from "./hooks/MetaMaskConnection.js";
 import Base from "./base.js"
 // import dotenv from "dotenv";
 //consumer Imports
-import {ConsumerAuthentication,ConsumerLogin} from "./consumer/authentication.js";
+import { ConsumerAuthentication, ConsumerLogin } from "./consumer/authentication.js";
 import AddFace from "./pages/addAdharAuthentication.js";
 import ConsumerFaceAuthentication from "./consumer/registration.js";
 import ConsumerOtp from "./consumer/otp.js";
@@ -16,6 +16,7 @@ import Form from "./consumer/Form.js";
 import AddConsumer from "./components/AddConsumer.js";
 import IsAuthenticated from "./hooks/IsAuthenticated.js";
 import AvailableMicroGridConsumer from "./consumer/AvailableMicroGridConsumer.js";
+// import GstPage from "./pages/GstPage"; // Adjust the import path to match your file structure
 
 // Producer ImportsA
 import ProducerHome from "./pages/ProducerHome.js";
@@ -40,14 +41,14 @@ import ProsumerSignUp from "./prosumer/signup.js";
 import ProsumerJoinMicroGrid from "./prosumer/joinmicrogrid.js"
 import ProsumerHome from "./prosumer/home.js";
 import ProsumerMyContracts from "./prosumer/mycontracts.js";
-import ProsumerAllPlans from  "./prosumer/allplans.js";
+import ProsumerAllPlans from "./prosumer/allplans.js";
 import ProsumerHelp from "./prosumer/help.js";
 import ProsumerHistory from "./prosumer/history.js";
 import ProducerCreateContract from "./prosumer/createcontract.js";
 import AddProsumer from "./components/AddProsumer.js";
 import AddAnotherProsumerToMg from "./pages/addAnotherProsumerToMicrogrid.js";
 import FetchData from "./pages/IntialProducer.js";
-
+import MicrogridVisualization from "./pages/MicrogridVisualization.js";
 // import { VariableProvider } from './Context/metaContext.js';
 
 
@@ -58,12 +59,12 @@ export default function App() {
   const [metaMaskAddress, setMetaMaskAddress] = useState("");
 
   //const producerAuthentic=IsAuthenticated("producerAuthToken")
-  const consumerAuthentic=IsAuthenticated("consumerAuthToken")
+  const consumerAuthentic = IsAuthenticated("consumerAuthToken")
   useEffect(() => {
     async function fetchData() {
       try {
         const { sendDataContract, getDataContract, metaMaskAddress } = await ConnectToMetaMask();
-        console.log(sendDataContract, getDataContract,metaMaskAddress);
+        console.log(sendDataContract, getDataContract, metaMaskAddress);
 
         // Set state with received data
         setGetContract(getDataContract);
@@ -112,15 +113,17 @@ export default function App() {
           />
           <Route
             path="/consumer/AvailableMicrogrid"
-            element={<AvailableMicroGridConsumer   getContract={getContract}
-            sendContract={sendContract}
-            metaMaskAddress={metaMaskAddress} />}
+            element={<AvailableMicroGridConsumer getContract={getContract}
+              sendContract={sendContract}
+              metaMaskAddress={metaMaskAddress} />}
           />
           {/* Producer Routes */}
+          <Route path="/addGST" element={<GstPage />} />
+
           <Route path="/producer/signup" element={<ProducerSignup />} />
           <Route path="/producer/intialSignup" element={<FetchData />} />
           <Route path="/producer/login" element={<ProducerLogIn />} />
-          <Route path="/producer/anotherProducersignup" element={<ProducerSignup anotherProducer={true}/>} />
+          <Route path="/producer/anotherProducersignup" element={<ProducerSignup anotherProducer={true} />} />
           <Route
             path="/ProducerHome"
             element={
@@ -145,7 +148,7 @@ export default function App() {
             path="/addAnotherProducer/:ProducerName"
             element={
               <AddProducer
-                anotherProducer = {true}
+                anotherProducer={true}
                 getContract={getContract}
                 sendContract={getContract}
                 metaMaskAddress={metaMaskAddress}
@@ -153,13 +156,13 @@ export default function App() {
             }
           />
           <Route
-          path="/producer/AddToMicrogrid/:ProducerName" element={
-            <AddAnotherProducerToMg/>
-          }/>
+            path="/producer/AddToMicrogrid/:ProducerName" element={
+              <AddAnotherProducerToMg />
+            } />
           <Route
-          path="/prosumer/AddToMicrogridPros/:ProsumerName" element={
-            <AddAnotherProsumerToMg/>
-          }/>
+            path="/prosumer/AddToMicrogridPros/:ProsumerName" element={
+              <AddAnotherProsumerToMg />
+            } />
           <Route
             path="/addMicrogrid"
             element={
@@ -194,9 +197,9 @@ export default function App() {
             path="/AddGreenEnergy"
             element={
               <AddGreenEnergy
-              getContract={getContract}
-              sendContract={getContract}
-              metaMaskAddress={metaMaskAddress}
+                getContract={getContract}
+                sendContract={getContract}
+                metaMaskAddress={metaMaskAddress}
               />
             }
           />
@@ -220,7 +223,7 @@ export default function App() {
               />
             }
           />
-          
+
           <Route path="/ShowMicroGrid" element={<AvailableMicrogrid />} />
           <Route
             path="/test"
@@ -273,8 +276,9 @@ export default function App() {
           />
           <Route
             path="/addAnotherProsumer/:ProsumerName"
-            element={<AddProsumer connect={sendContract} anotherProsumer = {true} />}
+            element={<AddProsumer connect={sendContract} anotherProsumer={true} />}
           />
+          <Route path="/MicrogridVisualization" element={<MicrogridVisualization />} />
         </Routes>
       </div>
     </Router>

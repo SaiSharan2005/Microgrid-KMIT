@@ -1,187 +1,138 @@
 import React, { useEffect, useState } from "react";
 import ProsumerNavbar from "./navbar.js";
 import { decryptAES } from "../hooks/encryption.js";
+
 function ProsumerAllPlans() {
   const [plans, getPlans] = useState([]);
+
   useEffect(() => {
     const takingPlans = async () => {
-      const response = await fetch(process.env.REACT_APP_BackendUrl+"/getAllPlans", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          microGridId:Number(decryptAES(localStorage.getItem("microGridId")))
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BackendUrl}/getAllPlans`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            microGridId: Number(decryptAES(localStorage.getItem("microGridId"))),
+          }),
+        }
+      );
       const data = await response.json();
       console.log(data);
       getPlans(data);
     };
     takingPlans();
   }, []);
-  let img = {
-    height: "25vh",
-    width: "100%",
-    backgroundSize: "cover",
-    padding: "15px",
-    borderRadius: "40px",
-  };
-  let cardBody = {
-    backgroundColor: "#001c20",
-    color: "white",
-    borderRadius: "20px",
-  };
-  let rowdiv = {
-    margin: "50px 30px 0 30px",
-    display: "flex-row !important",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "2rem",
-  };
-  let card = {
-    backgroundColor: "rgb(0, 28, 32)",
-    //boxShadow: '0 0 20px #001c20',
-    borderWidth: "4px",
-    borderRadius: "20px",
-    borderImage: "linear-gradient(45deg, #005d63, #02ffff, #005d63, #005d63) 1",
-  };
 
-  const BuyButton = ({ buttonText }) => {
-    const [buttonStyles, setButtonStyles] = useState({
-      border: "none",
-      width: "150px",   
-      height: "40px",
-      borderRadius: "3em",
+  const styles = {
+    container: {
+      backgroundColor: "#010c0e",
+      color: "#fff",
+      padding: "20px",
+      minHeight: "100vh",
       display: "flex",
-      justifyContent: "center",
+      flexDirection: "column",
       alignItems: "center",
-      gap: "12px",
+    },
+    card: {
+      backgroundColor: "#001c20",
+      border: "1px solid #02ffff",
+      borderRadius: "20px",
+      overflow: "hidden",
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+      marginBottom: "20px",
+      transition: "transform 0.3s ease",
+    },
+    cardHover: {
+      transform: "translateY(-5px)",
+    },
+    cardImg: {
+      height: "200px",
+      width: "100%",
+      objectFit: "cover", // Ensures proper image scaling
+      borderBottom: "2px solid #02ffff",
+      borderTopLeftRadius: "20px",
+      borderTopRightRadius: "20px",
+    },
+    cardBody: {
+      padding: "20px",
+      textAlign: "center",
+    },
+    cardTitle: {
+      fontSize: "1.2rem",
+      fontWeight: "bold",
+      marginBottom: "10px",
+    },
+    cardText: {
+      fontSize: "1rem",
+      marginBottom: "5px",
+    },
+    button: {
       background: "#005d63",
-      cursor: "pointer",
-      transition: "all 450ms ease-in-out",
-    });
-    const [textStyles, setTextStyles] = useState({
-      fontWeight: "600",
+      border: "none",
+      borderRadius: "20px",
       color: "#02ffff",
-      fontSize: "medium",
-    });
-    const handleHover = () => {
-      setButtonStyles((prevStyles) => ({
-        ...prevStyles,
-        background: "linear-gradient(0deg, #02ffff, #005d63)",
-        transform: "translateY(-2px)",
-      }));
-      setTextStyles((prevStyles) => ({
-        ...prevStyles,
-        color: "white",
-      }));
-    };
-    const handleLeave = () => {
-      setButtonStyles((prevStyles) => ({
-        ...prevStyles,
-        background: "#005d63",
-        transform: "translateY(0)",
-      }));
-      setTextStyles((prevStyles) => ({
-        ...prevStyles,
-        color: "#02ffff",
-      }));
-    };
-    return (
-      <button
-        className="btn"
-        style={buttonStyles}
-        onMouseEnter={handleHover}
-        onMouseLeave={handleLeave}
-      >
-        <span className="text" style={textStyles}>
-          {buttonText}
-        </span>
-      </button>
-    );
+      padding: "10px 20px",
+      fontSize: "1rem",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+    },
+    buttonHover: {
+      background: "linear-gradient(45deg, #02ffff, #005d63)",
+      color: "#fff",
+    },
+    grid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      gap: "20px",
+      width: "100%",
+      maxWidth: "1200px",
+    },
   };
 
-  let favIcon = {
-    color: "#ffffff",
-  };
+  const [hoveredCard, setHoveredCard] = useState(null);
 
-  let buyCart = {
-    height: "6vh",
-    width: "40px",
-    borderRadius: "25%",
-    backgroundColor: "#A6A6A6",
-    textAlign: "center",
-    padding: "2% 2% 0px 0px",
-    margin: "13px 20px 0px auto",
-  };
-  let style = {
-    backgroundColor: "#DAFFFB",
-    color: "black",
-    fontSize: 20,
-    textAlign: "center",
-    padding: "2%",
-    marginTop: "3%",
-    marginLeft: "30%",
-    heigth: "70%",
-    width: "40%",
-    borderRadius: "3%",
-  };
-  let inputbox = {
-    height: 40,
-    width: "60%",
-    borderRadius: 20,
-    backgroundColor: "#9BBEC8",
-    margin: 5,
-    borderWidth: 0,
-    textAlign: "center",
-    fontSize: 15,
-    marginBottom: 8,
-  };
-  let myButton = {
-    backgroundColor: "#164863",
-    color: "#ffffff",
-    height: "20%",
-    width: "30%",
-    borderRadius: 20,
-    padding: "2%",
-  };
-  let flexrow={
-    display:'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  };
   return (
-    <>
-    <div style={{ backgroundColor: '#010c0e', width: '100vw' }} >
-    <ProsumerNavbar/>
-      <div className="d-flex flex-wrap" style={{...rowdiv, display: 'flex', flexDirection: 'row', gap: '9rem'}}>
-        <div className="container">
-          <div className="row">
-        {plans.map((plan) => (
-          <div className="col-4 mb-5" style={{...flexrow}}>
-          <div className="card" style={{ width: "20vw", ...card }}>
+    <div style={styles.container}>
+      <ProsumerNavbar />
+      <h1 className="mb-5">Available Plans</h1>
+      <div style={styles.grid}>
+        {plans.map((plan, index) => (
+          <div
+            key={index}
+            style={{
+              ...styles.card,
+              ...(hoveredCard === index ? styles.cardHover : {}),
+            }}
+            onMouseEnter={() => setHoveredCard(index)}
+            onMouseLeave={() => setHoveredCard(null)}
+          >
             <img
-              style={{ ...img }}
+              style={styles.cardImg}
               src="https://www.eclosio.ong/wp-content/uploads/2018/08/default.png"
-              className="card-img-top"
-              alt="..."
+              alt="Plan Thumbnail"
             />
-            <div className="card-body" style={{ ...cardBody }}>
-              <h5 className="card-title">Units {plan.units}</h5>
-              <p className="card-text">Timespan {plan.timespan}</p>
-              <p className="card-text">mobile number {plan.mobile_number}</p>
-              <p className="card-text">company name {plan.company_name}
-              </p>
+            <div style={styles.cardBody}>
+              <h5 style={styles.cardTitle}>Units: {plan.units}</h5>
+              <p style={styles.cardText}>Timespan: {plan.timespan}</p>
+              <p style={styles.cardText}>Mobile: {plan.mobile_number}</p>
+              <p style={styles.cardText}>Company: {plan.company_name}</p>
+              <button
+                style={styles.button}
+                onMouseEnter={(e) =>
+                  (e.target.style.background = styles.buttonHover.background)
+                }
+                onMouseLeave={(e) =>
+                  (e.target.style.background = styles.button.background)
+                }
+              >
+                Buy Now
+              </button>
             </div>
-          </div>
           </div>
         ))}
       </div>
-      </div>
-       </div>
-      </div>
-      
-    </>
+    </div>
   );
 }
 

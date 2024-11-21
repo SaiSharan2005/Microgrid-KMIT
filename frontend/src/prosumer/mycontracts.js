@@ -3,179 +3,138 @@ import ProsumerNavbar from "./navbar.js";
 import { decryptAES } from "../hooks/encryption.js";
 
 function ProsumerMyContracts() {
-  const [plans, getPlans] = useState([]);
+  const [plans, setPlans] = useState([]);
+
   useEffect(() => {
-    const takingPlans = async () => {
-      const response = await fetch(process.env.REACT_APP_BackendUrl+"/getAllPlans", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          gst_number: decryptAES(localStorage.getItem("gstNumber")), // need to take from local Storage
-        }),
-      });
-      const data = await response.json();
-      console.log(data);
-      getPlans(data);
+    const fetchPlans = async () => {
+      try {
+        const response = await fetch(process.env.REACT_APP_BackendUrl + "/getAllPlans", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            gst_number: decryptAES(localStorage.getItem("gstNumber")),
+          }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const data = await response.json();
+        setPlans(data);
+      } catch (error) {
+        console.error("Error fetching plans:", error);
+      }
     };
-    takingPlans();
+
+    fetchPlans();
   }, []);
-  let img = {
-    height: "25vh",
-    width: "100%",
-    backgroundSize: "cover",
-    padding: "15px",
-    borderRadius: "40px",
-  };
-  let cardBody = {
-    backgroundColor: "#001c20",
-    color: "white",
-    borderRadius: "20px",
-  };
-  let rowdiv = {
-    margin: "50px 30px 0 30px",
-    display: "flex-row !important",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "2rem",
-  };
-  let card = {
-    backgroundColor: "rgb(0, 28, 32)",
-    //boxShadow: '0 0 20px #001c20',
-    borderWidth: "4px",
-    borderRadius: "20px",
-    borderImage: "linear-gradient(45deg, #005d63, #02ffff, #005d63, #005d63) 1",
-  };
-  let flexrow={
-    display:'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  };
 
-  const BuyButton = ({ buttonText }) => {
-    const [buttonStyles, setButtonStyles] = useState({
-      border: "none",
-      width: "150px",   
-      height: "40px",
-      borderRadius: "3em",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "12px",
-      background: "#005d63",
-      cursor: "pointer",
-      transition: "all 450ms ease-in-out",
-    });
-    const [textStyles, setTextStyles] = useState({
-      fontWeight: "600",
-      color: "#02ffff",
-      fontSize: "medium",
-    });
-    const handleHover = () => {
-      setButtonStyles((prevStyles) => ({
-        ...prevStyles,
-        background: "linear-gradient(0deg, #02ffff, #005d63)",
-        transform: "translateY(-2px)",
-      }));
-      setTextStyles((prevStyles) => ({
-        ...prevStyles,
-        color: "white",
-      }));
-    };
-    const handleLeave = () => {
-      setButtonStyles((prevStyles) => ({
-        ...prevStyles,
-        background: "#005d63",
-        transform: "translateY(0)",
-      }));
-      setTextStyles((prevStyles) => ({
-        ...prevStyles,
-        color: "#02ffff",
-      }));
-    };
-    return (
-      <button
-        className="btn"
-        style={buttonStyles}
-        onMouseEnter={handleHover}
-        onMouseLeave={handleLeave}
-      >
-        <span className="text" style={textStyles}>
-          {buttonText}
-        </span>
-      </button>
-    );
-  };
-
-  let favIcon = {
-    color: "#ffffff",
-  };
-
-  let buyCart = {
-    height: "6vh",
-    width: "40px",
-    borderRadius: "25%",
-    backgroundColor: "#A6A6A6",
-    textAlign: "center",
-    padding: "2% 2% 0px 0px",
-    margin: "13px 20px 0px auto",
-  };
-  let style = {
-    backgroundColor: "#DAFFFB",
-    color: "black",
-    fontSize: 20,
-    textAlign: "center",
-    padding: "2%",
-    marginTop: "3%",
-    marginLeft: "30%",
-    heigth: "70%",
-    width: "40%",
-    borderRadius: "3%",
-  };
-  let inputbox = {
-    height: 40,
-    width: "60%",
-    borderRadius: 20,
-    backgroundColor: "#9BBEC8",
-    margin: 5,
-    borderWidth: 0,
-    textAlign: "center",
-    fontSize: 15,
-    marginBottom: 8,
-  };
-  let myButton = {
-    backgroundColor: "#164863",
-    color: "#ffffff",
-    height: "20%",
-    width: "30%",
-    borderRadius: 20,
-    padding: "2%",
-  };
   return (
-    <>
-    <div style={{ backgroundColor: '#010c0e', width: '100vw' }} >
-    <ProsumerNavbar/>
-      <div className="d-flex flex-wrap" style={{...rowdiv, display: 'flex', flexDirection: 'row', gap: '9rem'}}>
-        <div className="container">
-          <div className="row">
-            {plans.map((plan) => (
-              <div className="col-4 mb-5" style={{...flexrow}}>
-                <div className="card" style={{ width: "20vw", ...card }}>
-                  <img style={{ ...img }} src="https://www.eclosio.ong/wp-content/uploads/2018/08/default.png" className="card-img-top" alt="..." />
-                  <div className="card-body" style={{ ...cardBody }}>
-                    <h5 className="card-title">Units {plan.units}</h5>
-                    <p className="card-text">Timespan {plan.timespan}
+    <div style={styles.pageContainer}>
+      <ProsumerNavbar />
+      <div className="container py-5">
+        <div className="row g-4 justify-content-center">
+          {plans.length > 0 ? (
+            plans.map((plan, index) => (
+              <div className="col-lg-3 col-md-4 col-sm-6" key={index}>
+                <div className="card h-100" style={styles.card}>
+                  <img
+                    src="https://www.eclosio.ong/wp-content/uploads/2018/08/default.png"
+                    className="card-img-top"
+                    alt="Plan Thumbnail"
+                    style={styles.cardImage}
+                  />
+                  <div className="card-body" style={styles.cardBody}>
+                    <h5 style={styles.cardTitle}>
+                      {plan.units} Units
+                    </h5>
+                    <p style={styles.cardText}>
+                      Timespan: {plan.timespan}
                     </p>
+                    <p style={styles.cardText}>
+                      Mobile: {plan.mobile_number}
+                    </p>
+                    <p style={styles.cardText}>
+                      Company: {plan.company_name}
+                    </p>
+                    <BuyButton buttonText="Buy Now" />
                   </div>
                 </div>
               </div>
-          ))}
-         </div>
-       </div>
+            ))
+          ) : (
+            <p style={styles.noPlansMessage}>No plans available currently.</p>
+          )}
+        </div>
       </div>
-      </div>
-    </>
+    </div>
   );
 }
+
+const BuyButton = ({ buttonText }) => (
+  <button
+    className="btn"
+    style={styles.buyButton}
+    onMouseEnter={(e) => (e.target.style.background = "#02ffff")}
+    onMouseLeave={(e) => (e.target.style.background = "#005d63")}
+  >
+    <span style={styles.buyButtonText}>{buttonText}</span>
+  </button>
+);
+
+const styles = {
+  pageContainer: {
+    backgroundColor: "#010c0e",
+    width: "100vw",
+    minHeight: "100vh",
+    paddingBottom: "20px",
+  },
+  card: {
+    background: "linear-gradient(145deg, #001c20, #00282c)",
+    borderRadius: "20px",
+    border: "none",
+    overflow: "hidden",
+    boxShadow: "0 8px 15px rgba(0, 0, 0, 0.2)",
+    transition: "transform 0.3s, box-shadow 0.3s",
+  },
+  cardImage: {
+    height: "200px",
+    objectFit: "cover",
+  },
+  cardBody: {
+    padding: "20px",
+    color: "white",
+    textAlign: "center",
+  },
+  cardTitle: {
+    fontWeight: "bold",
+    fontSize: "1.3rem",
+    marginBottom: "10px",
+  },
+  cardText: {
+    fontSize: "1rem",
+    margin: "5px 0",
+    color: "#cce7e8",
+  },
+  buyButton: {
+    display: "inline-block",
+    border: "none",
+    borderRadius: "25px",
+    background: "#005d63",
+    padding: "10px 25px",
+    cursor: "pointer",
+    transition: "background 0.3s, transform 0.2s",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+  },
+  buyButtonText: {
+    color: "#02ffff",
+    fontWeight: "bold",
+  },
+  noPlansMessage: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontSize: "1.5rem",
+    marginTop: "50px",
+  },
+};
 
 export default ProsumerMyContracts;

@@ -1,150 +1,106 @@
 import React, { useEffect, useState } from "react";
 import ConnectToMetaMask from "../hooks/MetaMaskConnection";
-import { Card } from 'react-bootstrap';
+import { Card, ListGroup, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import {encryptAES,decryptAES} from "../hooks/encryption.js"
-const flatted = require('flatted');
+import { encryptAES, decryptAES } from "../hooks/encryption.js";
+import "./AvailableMicrogrid.css"; // Add a custom CSS file for extra styling
 
 function AvailableMicrogrid() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [tem, setTem] = useState("");
   const [microGridData, setMicroGridData] = useState(null);
+
+  // Function to connect to MetaMask and set contract instance
   async function connect() {
-    const { sendDataContract } = await ConnectToMetaMask();
-    setTem(sendDataContract);
+    try {
+      const { sendDataContract } = await ConnectToMetaMask();
+      setTem(sendDataContract);
+    } catch (error) {
+      console.error("Error connecting to MetaMask: ", error);
+    }
   }
 
-useEffect(() => {
-            async function fetchData() {
-              try {
-                const response = await fetch(
-                  process.env.REACT_APP_BackendUrl+"/simulation/MicrogridData",
-                  {
-                    method: "GET",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  }
-                );
-                const data = await response.json();
-                setMicroGridData(data[Number(decryptAES(localStorage.getItem("microGridId")))]|| data);
-                console.log(data)
-              } catch (err) {
-                console.log("Something went wrong error: ", err);
-              }
-            }
-            
-        // setMicroGridData({
-        //   0: {
-        //     battery: {
-        //       0: {
-        //         charge: 100,
-        //         efficiency: 0.7,
-        //         max_Charge: 100,
-        //         charge_per_unit: 10,
-        //       },
-        //       1: {
-        //         charge: 100,
-        //         efficiency: 0.7,
-        //         max_Charge: 100,
-        //         charge_per_unit: 10,
-        //       },
-        //     },
-        //     green_energy: {
-        //       0: {
-        //         charge_produced: 100,
-        //         charge_per_unit: 10,
-        //         max_Charge: 1000,
-        //       },
-        //       1: {
-        //         charge_produced: 100,
-        //         charge_per_unit: 10,
-        //         max_Charge: 1000,
-        //       },
-        //     },
-        //     grid: {
-        //       0: {
-        //         charge: 1000,
-        //         max_export: 1000,
-        //         max_import: 500,
-        //       },
-        //       1: {
-        //         charge: 700,
-        //         max_export: 900,
-        //         max_import: 500,
-        //       },
-        //     },
-        //     load: {
-        //       0: { energyRequired: 0 },
-        //     },
-        //   },
-        //   1: {
-        //     battery: {
-        //       0: {
-        //         charge: 100,
-        //         efficiency: 0.7,
-        //         max_Charge: 100,
-        //         charge_per_unit: 10,
-        //       },
-        //       1: {
-        //         charge: 100,
-        //         efficiency: 0.7,
-        //         max_Charge: 100,
-        //         charge_per_unit: 10,
-        //       },
-        //     },
-        //     green_energy: {
-        //       0: {
-        //         charge_produced: 100,
-        //         charge_per_unit: 10,
-        //         max_Charge: 1000,
-        //       },
-        //       1: {
-        //         charge_produced: 100,
-        //         charge_per_unit: 10,
-        //         max_Charge: 1000,
-        //       },
-        //     },
-        //     grid: {
-        //       0: {
-        //         charge: 1000,
-        //         max_export: 1000,
-        //         max_import: 500,
-        //       },
-        //       1: {
-        //         charge: 700,
-        //         max_export: 900,
-        //         max_import: 500,
-        //       },
-        //     },
-        //     load: {
-        //       0: { energyRequired: 0 },
-        //     },
-        //   },
-        // });
-    
-            fetchData(); 
-      }, []);
-    
+  // Fetch microgrid data from the backend
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BackendUrl}/simulation/MicrogridData`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Retrieve selected microgrid using localStorage decryption
+        const selectedMicroGridId = decryptAES(localStorage.getItem("microGridId"));
+        setMicroGridData(data[Number(selectedMicroGridId)] || data);
+
+        console.log("Fetched Microgrid Data: ", data);
+      } catch (err) {
+        console.error("Error fetching microgrid data: ", err);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   return (
-    <div>
-      {((microGridData===null)||(0 === Object.keys(microGridData).length)  )? (
-        <p>No Microgrids are available. Be the first person to create a microgrid!</p>
+    <div className="container mt-4">
+      {/* Check if microgrid data is unavailable */}
+      {microGridData === null || Object.keys(microGridData).length === 0 ? (
+        <div className="text-center no-data">
+          <h4>No Microgrids Available</h4>
+          <p>Be the first to create a microgrid and explore its potential!</p>
+        </div>
       ) : (
-        <div class = "microgrid-card-details"  >
+        <div className="row">
+          {/* Map through each microgrid and display its data */}
           {Object.entries(microGridData).map(([microgridKey, microgridValue]) => (
-            <Card key={microgridKey} style={{ width: '18rem', marginBottom: '20px' }}>
-              <Card.Body>
-                <Card.Title>Microgrid: {microgridKey}</Card.Title>
-                {Object.entries(microgridValue).map(([key, value]) => (
-                  <Card.Text key={key}>
-                    {/* {key}: {Object.keys(value).length} */}
-                    {key}: {JSON.stringify(value)}
-                  </Card.Text>
-                ))}
-              </Card.Body>
-            </Card>
+            <div className="col-lg-4 col-md-6 mb-4" key={microgridKey}>
+              <Card className="shadow microgrid-card">
+                <Card.Header className="bg-dark text-white">
+                  <h5>Microgrid ID: <Badge bg="info">{microgridKey}</Badge></h5>
+                </Card.Header>
+                <Card.Body>
+                  {Object.entries(microgridValue).map(([sectionKey, sectionValue]) => (
+                    <div key={sectionKey} className="mb-3">
+                      <h6 className="section-title">{sectionKey.toUpperCase()}</h6>
+                      {Object.keys(sectionValue).length > 0 ? (
+                        <ListGroup variant="flush">
+                          {Object.entries(sectionValue).map(([key, value]) => (
+                            <ListGroup.Item key={key} className="list-item">
+                              <strong>{key}:</strong>{" "}
+                              {typeof value === "object"
+                                ? JSON.stringify(value, null, 2)
+                                : value}
+                            </ListGroup.Item>
+                          ))}
+                        </ListGroup>
+                      ) : (
+                        <p className="text-muted">No data available for {sectionKey}.</p>
+                      )}
+                    </div>
+                  ))}
+                </Card.Body>
+                <Card.Footer className="text-center bg-light">
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => navigate(`/microgrid/${microgridKey}`)}
+                  >
+                    View Details
+                  </button>
+                </Card.Footer>
+              </Card>
+            </div>
           ))}
         </div>
       )}

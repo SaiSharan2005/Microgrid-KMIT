@@ -50,11 +50,7 @@ function decryptAES(encryptedText) {
 
 const createProsumerUser = async (req, res) => {
   try {
-    console.log(req.body)
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ errors: errors.array() });
-    // }
+
 
     const hashedPassword = hashPassword(req.body.password);
     console.log(hashedPassword);
