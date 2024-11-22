@@ -1,3 +1,4 @@
+import numpy as np  # Use numpy properly
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from pymongo import MongoClient
@@ -9,6 +10,14 @@ import random
 from urllib.parse import quote_plus
 from fastapi.middleware.cors import CORSMiddleware
 from deepface import DeepFace
+from groq import Groq
+import sqlite3
+from sentence_transformers import SentenceTransformer
+
+# Initialize the model
+model = SentenceTransformer('all-MiniLM-L6-v2')  # Replace with your desired model
+
+
 app = FastAPI()
 
 app.add_middleware(
@@ -27,19 +36,29 @@ mongo_client = MongoClient(mongo_uri)
 db = mongo_client["test"]  # Replace with your database name
 collection = db["adharauthentics"]  # Replace with your collection name
 
+client = Groq(api_key="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")
+
 # Data model for the incoming request
 class FaceComparisonRequest(BaseModel):
     aadharnumber: str
     image: str  # Base64 string of the user's image
 
-# Save base64 string as an image
+class Query(BaseModel):
+    query: str
+
+import sqlite3
+
+def connect_to_database(db_name: str):
+    """Establish a connection to the SQLite database."""
+    try:
+        conn = sqlite3.connect(db_name)
+        return conn
+    except sqlite3.Error as e:
+        raise Exception(f"Error connecting to database: {str(e)}")
+
 # Save base64 string as an image
 def save_image(base64_image: str) -> str:
     try:
-        # Ensure the base64 string is correctly formatted
-        # if not base64_image.startswith("data:image/jpeg;base64,"):
-        #     raise ValueError("Base64 string is not in the expected format.")
-
         binary_data = base64.b64decode(base64_image.split(",")[-1])
         image = Image.open(io.BytesIO(binary_data))
         
@@ -61,29 +80,49 @@ def save_image(base64_image: str) -> str:
 def compare_faces(face1_path: str, face2_path: str) -> bool:
     try:
         result = DeepFace.verify(face1_path, face2_path)
-
-        # face_encoding_1 = face_recognition.face_encodings(face_recognition.load_image_file(face1_path))
-        # face_encoding_2 = face_recognition.face_encodings(face_recognition.load_image_file(face2_path))
-
-        # # Check if faces were detected in both images
-        # if not face_encoding_1 or not face_encoding_2:
-        #     raise HTTPException(status_code=400, detail="No faces detected in one or both images.")
-
-        # # Compare the faces
-        # results = face_recognition.compare_faces([face_encoding_1[0]], face_encoding_2[0])
-        # return results[0]
         return result["verified"]
     except Exception as e:
-        # return False
         raise HTTPException(status_code=500, detail=f"Error comparing faces: {str(e)}")
+from sklearn.metrics.pairwise import cosine_similarity
 
+def retrieve_embeddings_from_db(conn, query):
+    """Retrieves embeddings and their corresponding chunks for a specific collection name from the SQLite database."""
+    c = conn.cursor()
+    c.execute('''SELECT chunk_text, embedding FROM embeddings''')
+    rows = c.fetchall()
+
+    chunks = []
+    embeddings = []
+
+    for row in rows:
+        chunk_text, emb_str = row
+        emb = np.frombuffer(base64.b64decode(emb_str), dtype=np.float32)
+        chunks.append(chunk_text)
+        embeddings.append(emb)
+
+    # Encoding the query using your model (e.g., SentenceTransformer)
+    query_embedding = model.encode(query)  # Encoding the query
+
+    # Calculate cosine similarity
+    similarities = cosine_similarity([query_embedding], embeddings)[0]
+
+    # Get the indices of the top 3 most similar chunks
+    top_k = 3
+    top_k_indices = np.argpartition(-similarities, top_k)[:top_k]
+
+    # Sort the top_k indices by similarity in descending order
+    top_k_indices = top_k_indices[np.argsort(-similarities[top_k_indices])]
+
+    # Get the top 3 closest chunks
+    closest_chunks = [chunks[idx] for idx in top_k_indices]
+
+    return f"Question: {query} Context: {closest_chunks[0]} {closest_chunks[1]} {closest_chunks[2]}"
 
 @app.post("/compare-faces")
 async def compare_faces_endpoint(request: FaceComparisonRequest):
     try:
         # Fetch stored base64 image from MongoDB using Aadhar number
         stored_record = collection.find_one({"aadharnumber": request.aadharnumber})
-        print(stored_record)
         if not stored_record or "image" not in stored_record:
             raise HTTPException(status_code=404, detail="Aadhar record not found or missing image.")
 
@@ -101,6 +140,40 @@ async def compare_faces_endpoint(request: FaceComparisonRequest):
         # Respond with the result
         return {"match": match}
     except HTTPException as e:
-        raise e  # Forward HTTPExceptions with the original status code
+        raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
+@app.post("/llama3")
+async def get_response(query: Query):
+    try:
+        # Initialize messages list
+        messages = []
+        
+        # Database interaction and query retrieval (uncomment and modify as needed)
+        conn = connect_to_database('final.db')
+        queryFinal = retrieve_embeddings_from_db(conn, query.query)
+        print(queryFinal)
+        # Add query to the messages
+        messages.append({
+            "role": "user", 
+            "content": f"""remember uPlease answer the question in as much detail as possible based on the provided context.
+  Ensure to include all relevant details. If the answer is not available in the provided context,
+  kindly respond with "The answer is not available in the context." Please avoid providing incorrect answers.
+\n\n
+  Context:\n ${queryFinal}?\n"""
+            # "content": "remember u are an llm which is used for icar-crida work so please dont mention abt context just give a simple answer .this are" + queryFinal + "based on the context give me the answer and just give answer dont mention abt the data given to you"
+        })
+        
+        chat_completion = client.chat.completions.create(
+            messages=messages,
+            model="llama3-8b-8192",
+        )
+        result = chat_completion.choices[0].message.content
+        return {"response": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
